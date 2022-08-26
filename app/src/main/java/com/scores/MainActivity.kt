@@ -7,6 +7,8 @@ import android.widget.TextView
 
 class MainActivity : AppCompatActivity() {
 
+
+    private  val keyIndex = "index"
     private var scoreValues = arrayListOf(0,0)
     private lateinit var teamAScore : TextView
     private lateinit var teamBScore : TextView
@@ -58,6 +60,20 @@ class MainActivity : AppCompatActivity() {
 
 
     }
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        scoreValues = savedInstanceState.getIntegerArrayList(keyIndex)!!
+        if (scoreValues.isNotEmpty()){
+            updateScores(scoreValues)
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        if (scoreValues.isNotEmpty()) outState.putIntegerArrayList(keyIndex,scoreValues)
+        super.onSaveInstanceState(outState)
+    }
+
+
     private fun init() {
         teamAScore = findViewById(R.id.scoreA)
         teamBScore = findViewById(R.id.scoreB)
@@ -69,6 +85,11 @@ class MainActivity : AppCompatActivity() {
         teamAPl3   = findViewById(R.id.addA3)
         resetScores = findViewById(R.id.reset)
     }
+    private fun updateScores(values: ArrayList<Int>){
+        teamAScore.text = values[0].toString()
+        teamBScore.text = values[1].toString()
+    }
+
 
     private fun add3 (score : Int) : Int{
 
@@ -86,8 +107,7 @@ class MainActivity : AppCompatActivity() {
     private fun resetScore(){
         scoreValues[0] = 0
         scoreValues[1] = 0
-        teamAScore.text = scoreValues[0].toString()
-        teamBScore.text = scoreValues[1].toString()
+        updateScores(scoreValues)
     }
 
 }
